@@ -1,0 +1,57 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'me.draku'
+version = '0.0.1'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext {
+    hikariCPVersion = '3.1.0'
+    hibernateHikariExtVersion = '5.2.16.Final'
+    hibernateValidatorVersion = '6.0.9.Final'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+
+    compile("com.zaxxer:HikariCP:${hikariCPVersion}") {
+        exclude group: 'org.hibernate',
+                module: 'hibernate-core'
+    }
+
+    compile("org.hibernate:hibernate-hikaricp:${hibernateHikariExtVersion}") {
+        exclude group: 'com.zaxxer',
+                module: 'HikariCP'
+
+        exclude group: 'org.hibernate',
+                module: 'hibernate-core'
+    }
+
+    compile("org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}")
+
+    compile('org.flywaydb:flyway-core')
+
+    runtime('com.microsoft.sqlserver:mssql-jdbc')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
