@@ -1,5 +1,7 @@
 package me.draku.genesis.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -34,6 +36,7 @@ public final class Person implements Serializable {
     @Column(name = "phone", columnDefinition = "NVARCHAR")
     private String phone;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Account account;
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ public final class Register {
     @Autowired
     private AuthenticationService authenticator;
 
+    @CrossOrigin
     @PostMapping(value = "register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> post(final @RequestBody @Valid RegisterForm registerForm, final BindingResult result) {
         if (result.hasErrors()) {

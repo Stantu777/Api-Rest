@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ public final class Login {
     @Autowired
     private AuthenticationService authenticator;
 
+    @CrossOrigin
     @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> login(final @RequestBody @Valid Credential credential, final BindingResult result) {
         if (result.hasErrors()) {
