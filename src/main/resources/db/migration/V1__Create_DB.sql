@@ -26,10 +26,10 @@ CREATE TABLE [Genesis].[School] (
 CREATE TABLE [Genesis].[Person] (
     id BIGINT NOT NULL PRIMARY KEY,
     id_type SMALLINT NOT NULL,
-    name NVARCHAR(128) NOT NULL,
+    first_name NVARCHAR(128) NOT NULL,
     last_name NVARCHAR(128) NOT NULL,
-    age BIT NULL,
-    sex SMALLINT NULL,
+    age SMALLINT NULL,
+    sex BIT NULL,
     address NVARCHAR(255) NULL,
     email NVARCHAR(64) NULL,
     phone NVARCHAR(32) NULL,
@@ -39,15 +39,16 @@ CREATE TABLE [Genesis].[Person] (
     is_deleted BIT NULL DEFAULT 0,
     created_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time',
     updated_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time',
-    deleted_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time'
+    deleted_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time',
+
+    CONSTRAINT unq_person_email UNIQUE (email)
 );
 
-CREATE TABLE [Genesis].[User] (
-    id BIGINT NOT NULL PRIMARY KEY,
+CREATE TABLE [Genesis].[Account] (
+    person_id BIGINT NOT NULL PRIMARY KEY,
     role_id INTEGER NULL,
     password NVARCHAR(255) NOT NULL,
-    hash NVARCHAR(8) NULL,
-    active SMALLINT NOT NULL,
+    active BIT NULL DEFAULT 1,
 
     is_deleted BIT NULL DEFAULT 0,
     created_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time',
@@ -209,7 +210,7 @@ CREATE TABLE [Genesis].[ThesisFile] (
 );
 
 CREATE TABLE [Genesis].[Avatar] (
-    user_id BIGINT NOT NULL,
+    account_id BIGINT NOT NULL,
     file_id INTEGER NOT NULL,
 
     is_deleted BIT NULL DEFAULT 0,
@@ -217,7 +218,7 @@ CREATE TABLE [Genesis].[Avatar] (
     updated_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time',
     deleted_at DATETIMEOFFSET(0) NULL DEFAULT CAST(GETUTCDATE() as datetimeoffset(0)) AT TIME ZONE 'SA Pacific Standard Time',
 
-    PRIMARY KEY (user_id, file_id)
+    PRIMARY KEY (account_id, file_id)
 );
 
 CREATE TABLE [Genesis].[Remark] (
@@ -273,7 +274,7 @@ CREATE TABLE [Genesis].[Title] (
 
 CREATE TABLE [Genesis].[Submission] (
     id INTEGER NOT NULL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
+    account_id BIGINT NOT NULL,
     thesis_id INTEGER NOT NULL,
     is_approved BIT NULL DEFAULT 0,
 
@@ -343,9 +344,9 @@ GO
 ALTER TABLE [Genesis].[School] ADD CONSTRAINT fk_school_principal_id FOREIGN KEY (principal_id) REFERENCES [Genesis].[Person](id);
 ALTER TABLE [Genesis].[Person] ADD CONSTRAINT fk_person_school_id FOREIGN KEY (school_id) REFERENCES [Genesis].[School](id);
 ALTER TABLE [Genesis].[Person] ADD CONSTRAINT fk_person_title_id FOREIGN KEY (title_id) REFERENCES [Genesis].[Title](id);
-ALTER TABLE [Genesis].[User] ADD CONSTRAINT fk_user_id FOREIGN KEY (id) REFERENCES [Genesis].[Person](id);
-ALTER TABLE [Genesis].[User] ADD CONSTRAINT fk_user_role_id FOREIGN KEY (role_id) REFERENCES [Genesis].[Role](id);
-ALTER TABLE [Genesis].[Thesis] ADD CONSTRAINT fk_thesis_advisor_id FOREIGN KEY (advisor_id) REFERENCES [Genesis].[User](id);
+ALTER TABLE [Genesis].[Account] ADD CONSTRAINT fk_account_id FOREIGN KEY (person_id) REFERENCES [Genesis].[Person](id);
+ALTER TABLE [Genesis].[Account] ADD CONSTRAINT fk_account_role_id FOREIGN KEY (role_id) REFERENCES [Genesis].[Role](id);
+ALTER TABLE [Genesis].[Thesis] ADD CONSTRAINT fk_thesis_advisor_id FOREIGN KEY (advisor_id) REFERENCES [Genesis].[Account](person_id);
 ALTER TABLE [Genesis].[Thesis] ADD CONSTRAINT fk_thesis_inquiry_id FOREIGN KEY (inquiry_id) REFERENCES [Genesis].[Inquiry](id);
 ALTER TABLE [Genesis].[Author] ADD CONSTRAINT fk_author_id FOREIGN KEY (id) REFERENCES [Genesis].[Person](id);
 ALTER TABLE [Genesis].[Author] ADD CONSTRAINT fk_author_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
@@ -360,10 +361,10 @@ ALTER TABLE [Genesis].[RolePermission] ADD CONSTRAINT fk_rolepermission_permissi
 ALTER TABLE [Genesis].[Invite] ADD CONSTRAINT fk_invite_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
 ALTER TABLE [Genesis].[Invite] ADD CONSTRAINT fk_invite_author_id FOREIGN KEY (author_id) REFERENCES [Genesis].[Person](id);
 ALTER TABLE [Genesis].[Invite] ADD CONSTRAINT fk_invite_invitee_id FOREIGN KEY (invitee_id) REFERENCES [Genesis].[Person](id);
-ALTER TABLE [Genesis].[Notification] ADD CONSTRAINT fk_notification_owner_id FOREIGN KEY (owner_id) REFERENCES [Genesis].[User](id);
+ALTER TABLE [Genesis].[Notification] ADD CONSTRAINT fk_notification_owner_id FOREIGN KEY (owner_id) REFERENCES [Genesis].[Account](person_id);
 ALTER TABLE [Genesis].[ThesisFile] ADD CONSTRAINT fk_thesisfile_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
 ALTER TABLE [Genesis].[ThesisFile] ADD CONSTRAINT fk_thesisfile_file_id FOREIGN KEY (file_id) REFERENCES [Genesis].[File](id);
-ALTER TABLE [Genesis].[Avatar] ADD CONSTRAINT fk_avatar_user_id FOREIGN KEY (user_id) REFERENCES [Genesis].[User](id);
+ALTER TABLE [Genesis].[Avatar] ADD CONSTRAINT fk_avatar_account_id FOREIGN KEY (account_id) REFERENCES [Genesis].[Account](person_id);
 ALTER TABLE [Genesis].[Avatar] ADD CONSTRAINT fk_avatar_file_id FOREIGN KEY (file_id) REFERENCES [Genesis].[File](id);
 ALTER TABLE [Genesis].[Remark] ADD CONSTRAINT fk_remark_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
 ALTER TABLE [Genesis].[Remark] ADD CONSTRAINT fk_remark_author_id FOREIGN KEY (author_id) REFERENCES [Genesis].[Person](id);
@@ -371,7 +372,7 @@ ALTER TABLE [Genesis].[Remark] ADD CONSTRAINT fk_remark_ref_file FOREIGN KEY (re
 ALTER TABLE [Genesis].[Defense] ADD CONSTRAINT fk_defense_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
 ALTER TABLE [Genesis].[Examiner] ADD CONSTRAINT fk_examiner_id FOREIGN KEY (id) REFERENCES [Genesis].[Person](id);
 ALTER TABLE [Genesis].[Examiner] ADD CONSTRAINT fk_examiner_defense_id FOREIGN KEY (defense_id) REFERENCES [Genesis].[Defense](id);
-ALTER TABLE [Genesis].[Submission] ADD CONSTRAINT fk_submission_user_id FOREIGN KEY (user_id) REFERENCES [Genesis].[User](id);
+ALTER TABLE [Genesis].[Submission] ADD CONSTRAINT fk_submission_account_id FOREIGN KEY (account_id) REFERENCES [Genesis].[Account](person_id);
 ALTER TABLE [Genesis].[Submission] ADD CONSTRAINT fk_submission_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
 ALTER TABLE [Genesis].[Attachment] ADD CONSTRAINT fk_attachment_submission_id FOREIGN KEY (submission_id) REFERENCES [Genesis].[Submission](id);
 ALTER TABLE [Genesis].[Attachment] ADD CONSTRAINT fk_attachment_file_id FOREIGN KEY (file_id) REFERENCES [Genesis].[File](id);

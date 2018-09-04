@@ -1,15 +1,17 @@
 package me.draku.genesis;
 
+import me.draku.genesis.auth.service.AuthenticationService;
+import me.draku.genesis.auth.service.AuthenticationServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.Validator;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class GenesisApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GenesisApplication.class, args);
     }
@@ -17,5 +19,10 @@ public class GenesisApplication {
     @Bean
     public Validator localValidatorFactoryBean() {
         return new LocalValidatorFactoryBean();
+    }
+
+    @Bean
+    public AuthenticationService authServiceBean() {
+        return new AuthenticationServiceImpl();
     }
 }
