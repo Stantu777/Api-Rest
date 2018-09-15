@@ -1,14 +1,18 @@
 package me.draku.genesis.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(schema = "Genesis", name = "Account")
-public final class Account {
+public final class Account implements Serializable {
     @Id
     @Column(name = "id")
     private long id;
 
+    @JsonIgnore
     @Column(name = "password", columnDefinition = "NVARCHAR")
     private String password;
 

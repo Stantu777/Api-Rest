@@ -2,6 +2,8 @@ package me.draku.genesis;
 
 import me.draku.genesis.auth.service.AuthenticationService;
 import me.draku.genesis.auth.service.AuthenticationServiceImpl;
+import me.draku.genesis.permissions.RoleManager;
+import me.draku.genesis.permissions.RoleManagerImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -19,6 +21,11 @@ public class GenesisApplication {
     @Bean
     public Validator localValidatorFactoryBean() {
         return new LocalValidatorFactoryBean();
+    }
+
+    @Bean
+    public RoleManager roleManagerBean() {
+        return new RoleManagerImpl();
     }
 
     @Bean
