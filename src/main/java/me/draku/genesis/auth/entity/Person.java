@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(schema = "Genesis", name = "Person")
@@ -25,7 +26,7 @@ public final class Person implements Serializable {
     private short age;
 
     @Column(name = "sex")
-    private boolean sex;
+    private short sex;
 
     @Column(name = "address", columnDefinition = "NVARCHAR")
     private String address;
@@ -36,14 +37,42 @@ public final class Person implements Serializable {
     @Column(name = "phone", columnDefinition = "NVARCHAR")
     private String phone;
 
+    @OneToOne(fetch = FetchType.EAGER, optional = true)
+    private School school;
+
     @JsonIgnore
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Account account;
 
+    @JsonIgnore
+    @Column(name = "is_deleted")
+    private boolean deleted;
+
+    @JsonIgnore
+    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)")
+    private Date createdAt;
+
+    @JsonIgnore
+    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)")
+    private Date updatedAt;
+
+    @JsonIgnore
+    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)")
+    private Date deletedAt;
+
     public Person() {}
 
-    public Person(final long id, final short idType, final String firstName, final String lastName, final short age,
-                  final boolean sex, final String address, final String email, final String phone) {
+    public Person(
+            final long id,
+            final short idType,
+            final String firstName,
+            final String lastName,
+            final short age,
+            final short sex,
+            final String address,
+            final String email,
+            final String phone
+    ) {
         this.id = id;
         this.idType = idType;
         this.firstName = firstName;
@@ -95,11 +124,11 @@ public final class Person implements Serializable {
         this.age = age;
     }
 
-    public boolean isSex() {
+    public short getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(short sex) {
         this.sex = sex;
     }
 
@@ -129,5 +158,37 @@ public final class Person implements Serializable {
 
     public Account getAccount() {
         return account;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

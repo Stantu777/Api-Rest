@@ -1,4 +1,4 @@
-package me.draku.genesis.auth.entity;
+package me.draku.genesis.thesis.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -7,29 +7,30 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(schema = "Genesis", name = "Account")
-public final class Account implements Serializable {
+@Table(schema = "Genesis", name = "Thesis")
+public final class Thesis implements Serializable {
     @Id
     @Column(name = "id")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_thesis_id")
+    @SequenceGenerator(name = "seq_thesis_id", sequenceName = "seq_thesis_id")
+    private int id;
 
-    @JsonIgnore
-    @Column(name = "password", columnDefinition = "NVARCHAR")
-    private String password;
+    @Column(name = "topic", columnDefinition = "NVARCHAR")
+    private String topic;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
-    private Person person;
+    @Column(name = "description", columnDefinition = "NVARCHAR")
+    private String description;
+
+    @Column(name = "is_archived")
+    private boolean archived;
 
     @JsonIgnore
     @Column(name = "is_deleted")
     private boolean deleted;
 
-    @JsonIgnore
     @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)")
     private Date createdAt;
 
-    @JsonIgnore
     @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)")
     private Date updatedAt;
 
@@ -37,27 +38,38 @@ public final class Account implements Serializable {
     @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)")
     private Date deletedAt;
 
-    public Account() {}
+    public Thesis() {}
 
-    public Account(Person person, String password) {
-        this.person = person;
-        this.password = password;
-    }
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public String getPassword() {
-        return password;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public String getTopic() {
+        return topic;
     }
 
-    public Person getPerson() {
-        return person;
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public boolean isDeleted() {

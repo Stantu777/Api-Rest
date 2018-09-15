@@ -1,25 +1,28 @@
-package me.draku.genesis.auth.entity;
+package me.draku.genesis.thesis.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import me.draku.genesis.auth.entity.School;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(schema = "Genesis", name = "Account")
-public final class Account implements Serializable {
+@Table(schema = "Genesis", name = "LineOfInvestigation")
+public final class LineOfInvestigation implements Serializable {
     @Id
     @Column(name = "id")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_lineofinvestigation_id")
+    @SequenceGenerator(name = "seq_lineofinvestigation_id", sequenceName = "seq_lineofinvestigation_id")
+    private int id;
+
+    @Column(name = "description", columnDefinition = "NVARCHAR")
+    private String description;
 
     @JsonIgnore
-    @Column(name = "password", columnDefinition = "NVARCHAR")
-    private String password;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
-    private Person person;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id")
+    private School school;
 
     @JsonIgnore
     @Column(name = "is_deleted")
@@ -37,27 +40,24 @@ public final class Account implements Serializable {
     @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)")
     private Date deletedAt;
 
-    public Account() {}
-
-    public Account(Person person, String password) {
-        this.person = person;
-        this.password = password;
-    }
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Person getPerson() {
-        return person;
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 
     public boolean isDeleted() {

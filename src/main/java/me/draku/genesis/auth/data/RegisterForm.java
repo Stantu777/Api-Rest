@@ -19,7 +19,7 @@ public final class RegisterForm {
     private short age;
 
     @NotNull
-    private boolean sex;
+    private short sex;
 
     @NotNull
     private String address;
@@ -73,11 +73,11 @@ public final class RegisterForm {
         this.age = age;
     }
 
-    public boolean getSex() {
+    public short getSex() {
         return sex;
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(short sex) {
         this.sex = sex;
     }
 
