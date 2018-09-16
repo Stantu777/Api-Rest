@@ -25,6 +25,9 @@ public final class RegisterForm {
     private String address;
 
     @NotNull
+    private int schoolId;
+
+    @NotNull
     private String email;
 
     @NotNull
@@ -95,6 +98,14 @@ public final class RegisterForm {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
     }
 
     public String getPhone() {

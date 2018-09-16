@@ -7,7 +7,17 @@ INSERT INTO [Genesis].[School]
      VALUES
            ('Escuela Profesional de Ingeniería de Computación y Sistemas'
            ,'Av. La Fontana 1250 Urb. Sta. Patricia 2da Etapa La Molina'
-           ,'http://www.usmp.edu.pe/ffia/index.php'
+           ,'http://www.usmp.edu.pe/ffia/escuelas/sistemas/index.php'
+           ,'(511) 2086000'
+           ),
+           ('Escuela Profesional de Ingeniería Civil'
+           ,'Av. La Fontana 1250 Urb. Sta. Patricia 2da Etapa La Molina'
+           ,'http://www.usmp.edu.pe/ffia/escuelas/civil/index.php'
+           ,'(511) 2086000'
+           ),
+           ('Escuela Profesional de Ingeniería Industrial'
+           ,'Av. La Fontana 1250 Urb. Sta. Patricia 2da Etapa La Molina'
+           ,'http://www.usmp.edu.pe/ffia/escuelas/industrial/index.php'
            ,'(511) 2086000'
            )
 GO

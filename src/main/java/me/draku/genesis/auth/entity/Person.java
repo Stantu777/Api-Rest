@@ -37,6 +37,7 @@ public final class Person implements Serializable {
     @Column(name = "phone", columnDefinition = "NVARCHAR")
     private String phone;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, optional = true)
     private School school;
 
@@ -69,6 +70,7 @@ public final class Person implements Serializable {
             final String lastName,
             final short age,
             final short sex,
+            final School school,
             final String address,
             final String email,
             final String phone
@@ -79,6 +81,7 @@ public final class Person implements Serializable {
         this.lastName = lastName;
         this.age = age;
         this.sex = sex;
+        this.school = school;
         this.address = address;
         this.email = email;
         this.phone = phone;
@@ -130,6 +133,14 @@ public final class Person implements Serializable {
 
     public void setSex(short sex) {
         this.sex = sex;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 
     public String getAddress() {
