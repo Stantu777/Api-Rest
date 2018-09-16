@@ -31,8 +31,8 @@ public final class Me {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        final Optional<Person> person = this.repository.findById(token.getAccountId());
-
-        return new ResponseEntity<>(person.get(), HttpStatus.OK);
+        return repository.findById(token.getAccountId())
+                .map(person -> ResponseEntity.ok().body(person))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }

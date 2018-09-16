@@ -29,6 +29,7 @@ public final class School implements Serializable {
     @Column(name = "phone", columnDefinition = "NVARCHAR")
     private String phone;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, optional = true)
     private Person principal;
 
