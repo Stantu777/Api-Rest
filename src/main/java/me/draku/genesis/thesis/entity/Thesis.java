@@ -1,6 +1,7 @@
 package me.draku.genesis.thesis.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import me.draku.genesis.auth.entity.Person;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,8 +12,8 @@ import java.util.Date;
 public final class Thesis implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_thesis_id")
-    @SequenceGenerator(name = "seq_thesis_id", sequenceName = "seq_thesis_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_thesis_id")
+    @SequenceGenerator(name = "seq_thesis_id", sequenceName = "seq_thesis_id", schema = "Genesis", allocationSize = 1)
     private int id;
 
     @Column(name = "topic", columnDefinition = "NVARCHAR")
@@ -21,31 +22,46 @@ public final class Thesis implements Serializable {
     @Column(name = "description", columnDefinition = "NVARCHAR")
     private String description;
 
+    @Column(name = "is_approved")
+    private boolean approved;
+
     @Column(name = "is_archived")
     private boolean archived;
 
+    @OneToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "line_of_investigation_id")
+    private LineOfInvestigation lineOfInvestigation;
+
     @JsonIgnore
-    @Column(name = "is_deleted")
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "author_id")
+    private Person author;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "partner_id")
+    private Person partner;
+
+    @JsonIgnore
+    @Column(name = "is_deleted", insertable = false)
     private boolean deleted;
 
-    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @JsonIgnore
+    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date createdAt;
 
-    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @JsonIgnore
+    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date updatedAt;
 
     @JsonIgnore
-    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date deletedAt;
 
     public Thesis() {}
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTopic() {
@@ -64,12 +80,44 @@ public final class Thesis implements Serializable {
         this.description = description;
     }
 
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
     public boolean isArchived() {
         return archived;
     }
 
     public void setArchived(boolean archived) {
         this.archived = archived;
+    }
+
+    public LineOfInvestigation getLineOfInvestigation() {
+        return lineOfInvestigation;
+    }
+
+    public void setLineOfInvestigation(LineOfInvestigation lineOfInvestigation) {
+        this.lineOfInvestigation = lineOfInvestigation;
+    }
+
+    public Person getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Person author) {
+        this.author = author;
+    }
+
+    public Person getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Person partner) {
+        this.partner = partner;
     }
 
     public boolean isDeleted() {

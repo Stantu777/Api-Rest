@@ -94,9 +94,12 @@ CREATE TABLE [Genesis].[LineOfInvestigation] (
 
 CREATE TABLE [Genesis].[Thesis] (
     id INTEGER NOT NULL PRIMARY KEY,
+    author_id BIGINT NULL,
+    partner_id BIGINT NULL,
+    line_of_investigation_id INTEGER NULL,
     topic NVARCHAR(255) NOT NULL,
-    line_of_investigation_id INTEGER NOT NULL,
     description NVARCHAR(max) NOT NULL,
+    is_approved BIT NULL DEFAULT 0,
     is_archived BIT NULL DEFAULT 0,
 
     is_deleted BIT NULL DEFAULT 0,
@@ -169,4 +172,5 @@ ALTER TABLE [Genesis].[Person] ADD CONSTRAINT fk_person_active_thesis_id FOREIGN
 ALTER TABLE [Genesis].[Notification] ADD CONSTRAINT fk_notification_owner_id FOREIGN KEY (owner_id) REFERENCES [Genesis].[Account](person_id);
 ALTER TABLE [Genesis].[ThesisInvitation] ADD CONSTRAINT fk_thesisinvitation_thesis_id FOREIGN KEY (thesis_id) REFERENCES [Genesis].[Thesis](id);
 ALTER TABLE [Genesis].[ThesisInvitation] ADD CONSTRAINT fk_thesisinvitation_invitee_id FOREIGN KEY (invitee_id) REFERENCES [Genesis].[Person](id);
+ALTER TABLE [Genesis].[Thesis] ADD CONSTRAINT fk_thesis_author_id FOREIGN KEY (author_id) REFERENCES [Genesis].[Person](id);
 ALTER TABLE [Genesis].[Thesis] ADD CONSTRAINT fk_thesis_line_of_investigation_id FOREIGN KEY (line_of_investigation_id) REFERENCES [Genesis].[LineOfInvestigation](id);

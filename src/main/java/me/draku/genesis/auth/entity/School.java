@@ -38,19 +38,19 @@ public final class School implements Serializable {
     private List<LineOfInvestigation> linesOfInvestigation;
 
     @JsonIgnore
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", insertable = false)
     private boolean deleted;
 
     @JsonIgnore
-    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date createdAt;
 
     @JsonIgnore
-    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date updatedAt;
 
     @JsonIgnore
-    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date deletedAt;
 
     public int getId() {

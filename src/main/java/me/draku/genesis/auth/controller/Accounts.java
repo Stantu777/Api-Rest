@@ -17,19 +17,11 @@ public class Accounts {
 
     @CrossOrigin
     @GetMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> getSingleById(final @PathVariable(value = "id") String id) {
+    public ResponseEntity<?> getSingleById(final @PathVariable(value = "id") Long id) {
         // This endpoint must only be access by authenticated users
         // Add token handler soon
-        final long accountId;
-        try {
-            accountId = Long.parseLong(id);
-        }
-        catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
-
         return personRepository
-                .findById(accountId)
+                .findById(id)
                 .map(person -> ResponseEntity.ok().body(person))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -37,7 +29,7 @@ public class Accounts {
     @CrossOrigin
     @GetMapping(value = "/exists", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> doesPersonExist(
-            final @RequestParam(value = "id", required = false) String id,
+            final @RequestParam(value = "id", required = false) Long id,
             final @RequestParam(value = "email", required = false) String email
     ) {
         if (id == null && email == null) {
@@ -50,16 +42,7 @@ public class Accounts {
                     .orElseGet(() -> ResponseEntity.ok().body(false));
         }
 
-        final long personId;
-
-        try {
-            personId = Long.parseLong(id);
-        }
-        catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        return personRepository.findById(personId)
+        return personRepository.findById(id)
                 .map(person -> ResponseEntity.ok().body(true))
                 .orElseGet(() -> ResponseEntity.ok().body(false));
     }

@@ -1,6 +1,7 @@
 package me.draku.genesis.auth.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import me.draku.genesis.thesis.entity.Thesis;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -45,19 +46,24 @@ public final class Person implements Serializable {
     private Account account;
 
     @JsonIgnore
-    @Column(name = "is_deleted")
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "active_thesis_id")
+    private Thesis activeThesis;
+
+    @JsonIgnore
+    @Column(name = "is_deleted", insertable = false)
     private boolean deleted;
 
     @JsonIgnore
-    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "created_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date createdAt;
 
     @JsonIgnore
-    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "updated_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date updatedAt;
 
     @JsonIgnore
-    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)")
+    @Column(name = "deleted_at", columnDefinition = "DATETIMEOFFSET(0)", insertable = false)
     private Date deletedAt;
 
     public Person() {}
@@ -168,6 +174,14 @@ public final class Person implements Serializable {
 
     public Account getAccount() {
         return account;
+    }
+
+    public Thesis getActiveThesis() {
+        return activeThesis;
+    }
+
+    public void setActiveThesis(Thesis activeThesis) {
+        this.activeThesis = activeThesis;
     }
 
     public boolean isDeleted() {
