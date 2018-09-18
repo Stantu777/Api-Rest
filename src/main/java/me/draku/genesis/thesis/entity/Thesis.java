@@ -32,12 +32,10 @@ public final class Thesis implements Serializable {
     @JoinColumn(name = "line_of_investigation_id")
     private LineOfInvestigation lineOfInvestigation;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "author_id")
     private Person author;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "partner_id")
     private Person partner;

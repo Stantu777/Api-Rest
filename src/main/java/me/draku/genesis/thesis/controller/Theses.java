@@ -29,6 +29,12 @@ public final class Theses {
     private LineOfInvestigationRepository lineRepository;
 
     @CrossOrigin
+    @GetMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> listTheses() {
+        return ResponseEntity.ok().body(thesisRepository.findAll());
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/new", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createNew(
             final @RequestBody @Valid RegisterThesisForm registerThesisForm,
